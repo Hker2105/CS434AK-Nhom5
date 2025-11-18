@@ -1,35 +1,153 @@
-/* ====== TIÊU ĐỀ ĐẶT HÀNG ====== */
+/* Order */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f6f8fc;
+    color: #000;
+}
+
+.header {
+    background: #fff;
+    padding: 15px 30px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    color: #ff3131;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.search-box {
+    display: flex;
+    width: 45%;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+}
+
+.search-box button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-icons i {
+    font-size: 20px;
+    color: #7ffbff;
+}
+
+
+.navbar {
+    background: #fff;
+    padding: 12px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.dropbtn {
+    background: #7ffbff;
+    color: #000;
+    border: none;
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.menu-left {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    list-style: none;
+}
+
+.menu-left a {
+    text-decoration: none;
+    color: #000;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.menu-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    list-style: none;
+}
+
+.menu-right a {
+    text-decoration: none;
+    color: #000;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
 .order-header {
     background: #eef0ff;
     text-align: center;
-    padding: 40px 0;
+    padding: 45px 0;
 }
 
 .order-header h1 {
     font-size: 42px;
     font-weight: 800;
-    margin: 0;
 }
 
 .order-header p {
     margin-top: 10px;
     font-size: 18px;
-    color: #333;
+    color: #555;
 }
 
-/* ====== CONTAINER ====== */
+
 .order-container {
-    display: flex;
-    justify-content: space-between;
-    width: 85%;
+    width: 90%;
     margin: 40px auto;
+    display: flex;
     gap: 40px;
 }
 
-/* ====== FORM BÊN TRÁI ====== */
+.order-left {
+    width: 60%;
+}
+
 .order-left h2 {
     font-size: 22px;
-    font-weight: bold;
     margin-bottom: 20px;
 }
 
@@ -39,29 +157,36 @@
     gap: 20px 30px;
 }
 
+.order-grid label {
+    margin-bottom: 5px;
+    display: block;
+    font-weight: 600;
+}
+
 .order-grid input {
-    width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 10px;
 }
 
-/* ====== HÓA ĐƠN BÊN PHẢI ====== */
+.order-grid .full {
+    grid-column: span 2;
+}
+
+
 .order-right {
     width: 35%;
 }
 
 .invoice-box {
     border: 1px solid #ccc;
-    padding: 0;
     background: #fff;
 }
 
 .invoice-title {
     background: #ddd;
     padding: 15px;
-    font-weight: bold;
-    font-size: 20px;
+    font-weight: 700;
 }
 
 .invoice-item {
@@ -69,19 +194,19 @@
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid #eee;
-    font-size: 16px;
 }
 
-/* ====== NÚT ĐẶT HÀNG ====== */
 .order-btn {
-    width: 100%;
     background: #7ffbff;
-    border: none;
     padding: 16px;
+    width: 100%;
+    margin-top: 10px;
+    border: none;
     font-size: 20px;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
 }
+
 
 /* login */
 * {
