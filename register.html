@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>G5 Laptop - Đăng ký</title>
-    <link rel="stylesheet" href="asset/css/register.css">
+    <link rel="stylesheet" href="asset/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
@@ -50,39 +50,45 @@
     <section class="form-container">
         <h2>Đăng Ký</h2>
 
-        <label>Tên Đăng Nhập</label>
-        <input type="text" placeholder="Nhập tên đăng nhập...">
+        <form id="registerForm">
 
-        <label>Họ Tên</label>
-        <input type="text" placeholder="Nhập họ tên">
+            <label>Tên Đăng Nhập</label>
+            <input name="username" type="text" placeholder="Nhập tên đăng nhập..." required>
 
-        <label>SĐT</label>
-        <input type="text" placeholder="Nhập SĐT...">
+            <label>Họ Tên</label>
+            <input name="fullname" type="text" placeholder="Nhập họ tên" required>
 
-        <label>Địa chỉ</label>
-        <input type="text" placeholder="Nhập Đường/Thôn...">
-        <input type="text" placeholder="Nhập Phường/Xã...">
-        <input type="text" placeholder="Nhập Quận/Huyện...">
-        <input type="text" placeholder="Nhập Tỉnh/Thành phố...">
+            <label>SĐT</label>
+            <input name="phone" type="text" placeholder="Nhập SĐT..." required>
 
-        <label>Email</label>
-        <input type="text" placeholder="Nhập Email">
+            <label>Địa Chỉ</label>
+            <input name="address1" type="text" placeholder="Nhập Đường/Thôn...">
+            <input name="address2" type="text" placeholder="Nhập Phường/Xã...">
+            <input name="address3" type="text" placeholder="Nhập Quận/Huyện...">
+            <input name="address4" type="text" placeholder="Nhập Tỉnh/Thành phố...">
 
-        <label class="label-gender">Giới Tính</label>
-        <div class="gender-group">
-            <label><input type="radio" name="gender" value="Nam"> Nam</label>
-            <label><input type="radio" name="gender" value="Nữ"> Nữ</label>
-        </div>
+            <label>Email</label>
+            <input name="email" type="email" placeholder="Nhập Email" required>
 
-        <label>Mật khẩu</label>
-        <input type="text" placeholder="Nhập Mật khẩu">
+            <label class="label-gender">Giới Tính</label>
+            <div class="gender-group">
+                <label><input name="gender" type="radio" value="Nam" required> Nam</label>
+                <label><input name="gender" type="radio" value="Nữ"> Nữ</label>
+            </div>
 
-        <label>Nhập lại mật khẩu</label>
-        <input type="text" placeholder="Nhập lại mật khẩu">
+            <label>Mật khẩu</label>
+            <input name="password" type="password" placeholder="Nhập mật khẩu" required>
 
-        <button class="btn-submit">Đăng ký</button>
+            <label>Nhập lại mật khẩu</label>
+            <input name="repassword" type="password" placeholder="Nhập lại mật khẩu" required>
 
+            <button class="btn-submit" type="submit">Đăng ký</button>
+
+        </form>
     </section>
+
+    <!-- JS XỬ LÝ ĐĂNG KÝ -->
+    <script src="/backend/register.js"></script>
 
 </body>
 
