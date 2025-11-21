@@ -1,3 +1,7 @@
 {
+<<<<<<< HEAD
     "liveServer.settings.port": 5502
+=======
+    "liveServer.settings.host": "localhost"
+>>>>>>> 6fbd54a9058ca41a7c67bfd9f9994dd2a35a075f
 }
