@@ -1,7 +1,3 @@
-// =========================
-// JS ĐẶT HÀNG KHÔNG CẦN BACKEND
-// =========================
-
 const inputs = {
     name: document.querySelector('input[placeholder="Nhập họ và tên"]'),
     phone: document.querySelector('input[placeholder="Nhập số điện thoại"]'),
