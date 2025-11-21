@@ -52,7 +52,7 @@ function generateCaptcha() {
 app.get('/api/captcha', (req, res) => {
   const captcha = generateCaptcha();
   req.session.captcha = captcha;
-  
+
   res.json({
     success: true,
     captcha: captcha
@@ -82,7 +82,7 @@ app.post('/api/login', async (req, res) => {
 
     // Tìm user trong database
     const user = users.find(u => u.username === username);
-    
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -92,7 +92,7 @@ app.post('/api/login', async (req, res) => {
 
     // Kiểm tra mật khẩu
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    
+
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
@@ -103,9 +103,9 @@ app.post('/api/login', async (req, res) => {
     // Tạo JWT token
     const tokenExpiry = remember ? '30d' : '24h';
     const token = jwt.sign(
-      { 
-        userId: user.id, 
-        username: user.username 
+      {
+        userId: user.id,
+        username: user.username
       },
       JWT_SECRET,
       { expiresIn: tokenExpiry }
@@ -214,7 +214,7 @@ function authenticateToken(req, res, next) {
 // API: Lấy thông tin user (cần xác thực)
 app.get('/api/user/profile', authenticateToken, (req, res) => {
   const user = users.find(u => u.id === req.user.userId);
-  
+
   if (!user) {
     return res.status(404).json({
       success: false,
