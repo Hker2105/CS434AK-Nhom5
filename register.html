@@ -53,13 +53,13 @@
         <form id="registerForm">
 
             <label>Tên Đăng Nhập</label>
-            <input name="username" type="text" placeholder="Nhập tên đăng nhập...">
+            <input name="username" type="text" placeholder="Nhập tên đăng nhập..." required>
 
             <label>Họ Tên</label>
-            <input name="fullname" type="text" placeholder="Nhập họ tên">
+            <input name="fullname" type="text" placeholder="Nhập họ tên" required>
 
             <label>SĐT</label>
-            <input name="phone" type="text" placeholder="Nhập SĐT...">
+            <input name="phone" type="text" placeholder="Nhập SĐT..." required>
 
             <label>Địa Chỉ</label>
             <input name="address1" type="text" placeholder="Nhập Đường/Thôn...">
@@ -68,44 +68,27 @@
             <input name="address4" type="text" placeholder="Nhập Tỉnh/Thành phố...">
 
             <label>Email</label>
-            <input name="email" type="text" placeholder="Nhập Email">
+            <input name="email" type="email" placeholder="Nhập Email" required>
 
             <label class="label-gender">Giới Tính</label>
             <div class="gender-group">
-                <label><input name="gender" type="radio" value="Nam"> Nam</label>
+                <label><input name="gender" type="radio" value="Nam" required> Nam</label>
                 <label><input name="gender" type="radio" value="Nữ"> Nữ</label>
             </div>
 
             <label>Mật khẩu</label>
-            <input name="password" type="password" placeholder="Nhập mật khẩu">
+            <input name="password" type="password" placeholder="Nhập mật khẩu" required>
 
             <label>Nhập lại mật khẩu</label>
-            <input name="repassword" type="password" placeholder="Nhập lại mật khẩu">
+            <input name="repassword" type="password" placeholder="Nhập lại mật khẩu" required>
 
             <button class="btn-submit" type="submit">Đăng ký</button>
 
         </form>
     </section>
 
-    <script>
-        console.log("Script loaded!");
-
-        document.getElementById("registerForm").addEventListener("submit", async function (e) {
-            console.log("Submit clicked!");
-            e.preventDefault();
-
-            const data = Object.fromEntries(new FormData(this));
-
-            const res = await fetch("http://localhost:3000/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-
-            const result = await res.json();
-            alert(result.message);
-        });
-    </script>
+    <!-- JS XỬ LÝ ĐĂNG KÝ -->
+    <script src="/backend/register.js"></script>
 
 </body>
 
