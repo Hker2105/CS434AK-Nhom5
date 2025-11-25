@@ -19,6 +19,12 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Kiểm tra mật khẩu hợp lệ
+        if (data.password.length < 6) {
+            alert("Mật khẩu phải từ 6 ký tự trở lên!");
+            return;
+        }
+
         // Lấy danh sách user từ localStorage
         let users = JSON.parse(localStorage.getItem("users") || "[]");
 
@@ -34,20 +40,59 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(data.email)) {
+            alert("Email không hợp lệ!");
+            return;
+        }
+
         // Kiểm tra số điện thoại trùng
         if (users.some(u => u.phone === data.phone)) {
             alert("Số điện thoại đã được sử dụng!");
             return;
         }
+    
 
-        // Lưu user mới
-        users.push(data);
+        // Kiểm tra số điện hợp lệ
+        const phoneRegex = /^0\d{9}$/;
+        if (!phoneRegex.test(data.phone)) {
+            alert("Số điện thoại không hợp lệ!");
+            return;
+        }
+
+
+        // Tạo user object chuẩn
+        const newUser = {
+            id: Date.now(),
+            username: data.username,
+            fullname: data.fullname,
+            phone: data.phone,
+            address: {
+                address1: data.address1,
+                address2: data.address2,
+                address3: data.address3,
+                address4: data.address4
+            },
+            email: data.email,
+            gender: data.gender,
+            password: data.password
+        };
+
+        // Thêm user mới
+        users.push(newUser);
         localStorage.setItem("users", JSON.stringify(users));
 
+        // Lưu user hiện tại vào localStorage (để dùng cho login & hiển thị)
+        localStorage.setItem("currentUser", JSON.stringify(newUser));
+
+        // Thông báo thành công
         alert("Đăng ký thành công!");
 
         // Reset form
         this.reset();
+
+        // Chuyển sang trang login
+        window.location.href = "login.html";
     });
 
 });
