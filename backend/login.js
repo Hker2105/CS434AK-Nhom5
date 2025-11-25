@@ -3,69 +3,54 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const session = require('express-session');
 
 const app = express();
+const PORT = 3000;
+const JWT_SECRET = 'your-secret-key-change-in-production';
 
 // Middleware
 app.use(express.json());
-app.use(cors({
-  origin: 'http://localhost:3000', // Thay đổi theo domain của frontend
-  credentials: true
-}));
+app.use(cors());
 
-app.use(session({
-  secret: 'your-secret-key-change-this',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: false, // Đặt true nếu dùng HTTPS
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 giờ
-  }
-}));
-
-// Giả lập database (trong thực tế nên dùng MongoDB, MySQL, etc.)
+// Database giả lập (trong thực tế nên dùng MongoDB, PostgreSQL, etc.)
 const users = [
   {
     id: 1,
     username: 'admin',
-    password: '$2a$10$XQ3jXKzPwqhYfWZGXVJxvO.W8qvKGKJHG0xnhKxUHRl5QHKlPbqOW', // password: admin123
-    email: 'admin@g5laptop.com'
+    password: '$2a$10$YourHashedPasswordHere', // password: 'admin123'
+    email: 'admin@example.com'
   }
 ];
 
-// JWT Secret
-const JWT_SECRET = 'your-jwt-secret-key-change-this';
+// Lưu trữ CAPTCHA tạm thời (trong thực tế nên dùng Redis)
+const captchaStore = new Map();
 
-// Hàm tạo mã CAPTCHA đơn giản
-function generateCaptcha() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-  let captcha = '';
-  for (let i = 0; i < 4; i++) {
-    captcha += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return captcha;
-}
+// ===== API ENDPOINTS =====
 
-// API: Lấy mã CAPTCHA mới
-app.get('/api/captcha', (req, res) => {
-  const captcha = generateCaptcha();
-  req.session.captcha = captcha;
-
+// 1. Tạo CAPTCHA
+app.get('/api/captcha/generate', (req, res) => {
+  const captchaId = generateId();
+  const captchaText = generateCaptcha();
+  
+  // Lưu captcha với thời gian hết hạn 5 phút
+  captchaStore.set(captchaId, {
+    text: captchaText,
+    expiresAt: Date.now() + 5 * 60 * 1000
+  });
+  
   res.json({
-    success: true,
-    captcha: captcha
+    captchaId,
+    captchaText // Trong thực tế nên trả về ảnh SVG/PNG
   });
 });
 
-// API: Đăng nhập
-app.post('/api/login', async (req, res) => {
+// 2. API Đăng nhập
+app.post('/api/auth/login', async (req, res) => {
   try {
-    const { username, password, captcha, remember } = req.body;
+    const { username, password, captcha, captchaId, rememberMe } = req.body;
 
-    // Kiểm tra dữ liệu đầu vào
-    if (!username || !password || !captcha) {
+    // Validate đầu vào
+    if (!username || !password || !captcha || !captchaId) {
       return res.status(400).json({
         success: false,
         message: 'Vui lòng điền đầy đủ thông tin'
@@ -73,16 +58,34 @@ app.post('/api/login', async (req, res) => {
     }
 
     // Kiểm tra CAPTCHA
-    if (captcha.toLowerCase() !== req.session.captcha?.toLowerCase()) {
+    const storedCaptcha = captchaStore.get(captchaId);
+    if (!storedCaptcha) {
+      return res.status(400).json({
+        success: false,
+        message: 'Mã xác nhận đã hết hạn'
+      });
+    }
+
+    if (storedCaptcha.expiresAt < Date.now()) {
+      captchaStore.delete(captchaId);
+      return res.status(400).json({
+        success: false,
+        message: 'Mã xác nhận đã hết hạn'
+      });
+    }
+
+    if (storedCaptcha.text.toLowerCase() !== captcha.toLowerCase()) {
       return res.status(400).json({
         success: false,
         message: 'Mã xác nhận không đúng'
       });
     }
 
-    // Tìm user trong database
-    const user = users.find(u => u.username === username);
+    // Xóa captcha đã sử dụng
+    captchaStore.delete(captchaId);
 
+    // Tìm user
+    const user = users.find(u => u.username === username);
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -91,9 +94,8 @@ app.post('/api/login', async (req, res) => {
     }
 
     // Kiểm tra mật khẩu
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
       return res.status(401).json({
         success: false,
         message: 'Tên đăng nhập hoặc mật khẩu không đúng'
@@ -101,31 +103,27 @@ app.post('/api/login', async (req, res) => {
     }
 
     // Tạo JWT token
-    const tokenExpiry = remember ? '30d' : '24h';
+    const tokenExpiry = rememberMe ? '7d' : '1d';
     const token = jwt.sign(
-      {
-        userId: user.id,
-        username: user.username
+      { 
+        userId: user.id, 
+        username: user.username 
       },
       JWT_SECRET,
       { expiresIn: tokenExpiry }
     );
 
-    // Lưu thông tin user vào session
-    req.session.userId = user.id;
-    req.session.username = user.username;
-
-    // Tạo CAPTCHA mới cho lần đăng nhập tiếp theo
-    req.session.captcha = generateCaptcha();
-
+    // Trả về thông tin đăng nhập thành công
     res.json({
       success: true,
       message: 'Đăng nhập thành công',
-      token: token,
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email
+      data: {
+        token,
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email
+        }
       }
     });
 
@@ -133,13 +131,13 @@ app.post('/api/login', async (req, res) => {
     console.error('Login error:', error);
     res.status(500).json({
       success: false,
-      message: 'Lỗi server, vui lòng thử lại sau'
+      message: 'Có lỗi xảy ra, vui lòng thử lại'
     });
   }
 });
 
-// API: Đăng ký tài khoản mới
-app.post('/api/register', async (req, res) => {
+// 3. API Đăng ký (tạo tài khoản mới)
+app.post('/api/auth/register', async (req, res) => {
   try {
     const { username, password, email } = req.body;
 
@@ -151,9 +149,8 @@ app.post('/api/register', async (req, res) => {
       });
     }
 
-    // Kiểm tra username đã tồn tại
-    const existingUser = users.find(u => u.username === username);
-    if (existingUser) {
+    // Kiểm tra user đã tồn tại
+    if (users.find(u => u.username === username)) {
       return res.status(400).json({
         success: false,
         message: 'Tên đăng nhập đã tồn tại'
@@ -173,29 +170,34 @@ app.post('/api/register', async (req, res) => {
 
     users.push(newUser);
 
-    res.json({
+    res.status(201).json({
       success: true,
-      message: 'Đăng ký thành công'
+      message: 'Đăng ký thành công',
+      data: {
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email
+      }
     });
 
   } catch (error) {
     console.error('Register error:', error);
     res.status(500).json({
       success: false,
-      message: 'Lỗi server, vui lòng thử lại sau'
+      message: 'Có lỗi xảy ra, vui lòng thử lại'
     });
   }
 });
 
-// Middleware xác thực JWT
-function authenticateToken(req, res, next) {
+// 4. Middleware xác thực JWT
+const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
     return res.status(401).json({
       success: false,
-      message: 'Không có quyền truy cập'
+      message: 'Không tìm thấy token'
     });
   }
 
@@ -209,22 +211,22 @@ function authenticateToken(req, res, next) {
     req.user = user;
     next();
   });
-}
+};
 
-// API: Lấy thông tin user (cần xác thực)
+// 5. API lấy thông tin user (cần authentication)
 app.get('/api/user/profile', authenticateToken, (req, res) => {
   const user = users.find(u => u.id === req.user.userId);
-
+  
   if (!user) {
     return res.status(404).json({
       success: false,
-      message: 'Không tìm thấy user'
+      message: 'Không tìm thấy người dùng'
     });
   }
 
   res.json({
     success: true,
-    user: {
+    data: {
       id: user.id,
       username: user.username,
       email: user.email
@@ -232,27 +234,38 @@ app.get('/api/user/profile', authenticateToken, (req, res) => {
   });
 });
 
-// API: Đăng xuất
-app.post('/api/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        message: 'Lỗi khi đăng xuất'
-      });
+// ===== HELPER FUNCTIONS =====
+
+function generateCaptcha() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  let captcha = '';
+  for (let i = 0; i < 5; i++) {
+    captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return captcha;
+}
+
+function generateId() {
+  return Math.random().toString(36).substring(2, 15) + 
+         Math.random().toString(36).substring(2, 15);
+}
+
+// Dọn dẹp captcha hết hạn mỗi 10 phút
+setInterval(() => {
+  const now = Date.now();
+  for (const [id, data] of captchaStore.entries()) {
+    if (data.expiresAt < now) {
+      captchaStore.delete(id);
     }
-    res.json({
-      success: true,
-      message: 'Đăng xuất thành công'
-    });
-  });
-});
+  }
+}, 10 * 60 * 1000);
 
 // Start server
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server đang chạy trên port ${PORT}`);
+  console.log(`Server đang chạy tại http://localhost:${PORT}`);
+  console.log('\nCác API endpoints:');
+  console.log('POST /api/auth/login - Đăng nhập');
+  console.log('POST /api/auth/register - Đăng ký');
+  console.log('GET  /api/captcha/generate - Tạo CAPTCHA');
+  console.log('GET  /api/user/profile - Lấy thông tin user (cần token)');
 });
-
-// Export để testing
-module.exports = app;
