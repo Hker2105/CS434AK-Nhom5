@@ -1,5 +1,3 @@
-
-
 /* REGISTER */
 
 body {
@@ -94,7 +92,7 @@ body {
     font-size: 15px;
 }
 
-.navbar ul li a:hover{
+.navbar ul li a:hover {
     color: #7ffbff;
 }
 
@@ -146,7 +144,7 @@ body {
     border-radius: 0;
 }
 
-.dropbtn:hover{
+.dropbtn:hover {
     cursor: pointer;
     background-color: #a3d4d5;
 }
@@ -264,114 +262,116 @@ body {
 
 /* CART */
 
-.out-right{
+.out-right {
     margin-right: 36px;
     padding-left: 86px;
 }
 
-.out-right:hover{
+.out-right:hover {
     cursor: pointer;
     color: #7ffbff;
 }
 
-.header_contain{
+.header_contain {
     background-color: #eef0ff;
     height: 56px;
 }
 
-.header_contain h1{
+.header_contain h1 {
+    margin: 0;
     color: #000;
     padding-top: 10px;
+    padding-left: 46%
 }
 
-.cart_contain{
+.cart_contain {
     display: flex;
     justify-content: space-around;
     margin: 50px;
 }
 
-.info_cart-title{
+.info_cart-title {
     list-style: none;
     display: flex;
 }
 
-.cart_about li{
+.cart_about li {
     background-color: #eef0ff;
     padding: 12px 20px;
 }
 
-.info_cart-frame{
+.info_cart-frame {
     padding: 25px;
     border: 1px solid #ccc;
 }
 
-.price_cart{
+.price_cart {
     border: 1px solid #ccc;
 }
 
-.price_cart-discount{
+.price_cart-discount {
     justify-content: space-around;
     display: flex;
 }
 
-.show_discount{
+.show_discount {
     margin-right: 194px;
     color: #ccc;
     padding: 14px;
 }
 
-.add_discount{
+.add_discount {
     padding: 14px;
     background-color: #7ffbff;
 }
 
-.add_discount a{
+.add_discount a {
     text-decoration: none;
     color: #333;
 }
 
-.add_discount:hover{
+.add_discount:hover {
     cursor: pointer;
     background-color: #a3d4d5;
 }
 
-.price_cart-info-header{
+.price_cart-info-header {
     background-color: #eef0ff;
     text-align: center;
     padding: 10px 0;
 }
 
-.cost_cart{
+.cost_cart {
     margin: 20px 0;
 }
 
-.cost_cart-text{
+.cost_cart-text {
     padding-right: 42px;
 }
 
-.cost_cart-child{
+.cost_cart-child {
     padding: 10px 30px;
     font-size: 1.1rem;
     display: flex;
     justify-content: space-between;
 }
 
-.price_cart-footer{
+.price_cart-footer {
     border-top: 1px solid #ccc;
 }
 
-.show_price{
+.show_price {
     display: flex;
     font-size: 1.3em;
     justify-content: space-between;
     padding: 20px 28px;
 }
 
-.price_cart-footer{
+.price_cart-footer {
     margin: 24px 0;
 }
 
-.button_buy{
+.button_buy {
     margin-top: 12px;
     margin-left: 17%;
     border: none;
@@ -381,7 +381,7 @@ body {
     font-size: 1.1rem;
 }
 
-.button_buy:hover{
+.button_buy:hover {
     cursor: pointer;
     background-color: #a3d4d5;
 }
