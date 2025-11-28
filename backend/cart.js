@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         document.querySelectorAll(".btn-remove").forEach(btn => {
-            btn.addEventListener("click", e => {
+            btn.addEventListener("click", e => {    
                 const idx = e.target.dataset.index;
                 cartItems.splice(idx, 1);
                 renderCart();
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     exitBtn.addEventListener("click", () => {
         const confirmExit = confirm("Bạn có muốn thoát khỏi trang này không?");
         if (confirmExit) {
-            window.location.href = "login.html";
+            window.location.href = "index.html";
         }
     });
 
