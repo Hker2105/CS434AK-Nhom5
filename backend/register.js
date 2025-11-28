@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Số điện thoại đã được sử dụng!");
             return;
         }
-    
+
 
         // Kiểm tra số điện hợp lệ
         const phoneRegex = /^0\d{9}$/;
@@ -93,6 +93,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Chuyển sang trang login
         window.location.href = "login.html";
+    });
+    
+    // Thoát về trang chủ
+    const exitBtn = document.querySelector(".out-right");
+
+    exitBtn.addEventListener("click", () => {
+        const confirmExit = confirm("Bạn có muốn thoát khỏi trang này không?");
+        if (confirmExit) {
+            window.location.href = "index.html";
+        }
     });
 
 });
