@@ -1,0 +1,29 @@
+# Exclude system files
+.DS_Store
+Thumbs.db
+
+# Node.js
+node_modules/
+package-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Java
+*.class
+*.jar
+*.war
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
