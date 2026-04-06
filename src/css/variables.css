@@ -1,0 +1,21 @@
+:root {
+    /* Color Scheme for G5 LAPTOP */
+    --color-background: #FFFFFF;
+    --color-primary: #007BFF;
+    --color-secondary: #6C757D;
+    --color-accent: #28A745;
+    --color-text-primary: #212529;
+    --color-text-secondary: #6C757D;
+
+    /* Font settings */
+    --font-family-sans: 'Open Sans', sans-serif;
+    --font-family-serif: 'Roboto Slab', serif;
+    --font-size-base: 16px;
+
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 3rem;
+}
